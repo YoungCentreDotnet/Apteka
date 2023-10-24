@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<PharmacyDbContext>(op =>
-                op.UseNpgsql(builder.Configuration.GetConnectionString("StudyConectionString")));
+                op.UseNpgsql(builder.Configuration.GetConnectionString("PharmacyConectionString")));
 
 var app = builder.Build();
 
