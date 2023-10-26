@@ -6,8 +6,7 @@ namespace Apteka.Backend.DataLayer
     public class PharmacyDbContext:DbContext
     {
         
-        public PharmacyDbContext(DbContextOptions<PharmacyDbContext> db) :
-            base(db)
+        public PharmacyDbContext(DbContextOptions<PharmacyDbContext> db) :base(db)
         { }
 
         public DbSet<User> Users { get; set; }
