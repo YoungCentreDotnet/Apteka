@@ -1,10 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Repositori\**" />
+    <Content Remove="Repositori\**" />
+    <EmbeddedResource Remove="Repositori\**" />
+    <None Remove="Repositori\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="linq2db" Version="5.3.2" />
@@ -19,10 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Model\" />
     <Folder Include="DataLayer\" />
-    <Folder Include="Repositori\" />
   </ItemGroup>
 
 </Project>
