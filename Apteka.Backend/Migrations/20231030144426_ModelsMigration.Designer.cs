@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Apteka.Backend.Migrations
 {
     [DbContext(typeof(PharmacyDbContext))]
-    [Migration("20231026150239_AccountMigration")]
-    partial class AccountMigration
+    [Migration("20231030144426_ModelsMigration")]
+    partial class ModelsMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,11 @@ namespace Apteka.Backend.Migrations
 
             modelBuilder.Entity("Apteka.Backend.Model.Admin", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -55,9 +57,11 @@ namespace Apteka.Backend.Migrations
 
             modelBuilder.Entity("Apteka.Backend.Model.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("DataOfBrith")
                         .HasColumnType("timestamp with time zone");

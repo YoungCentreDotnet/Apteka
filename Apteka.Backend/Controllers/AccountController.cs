@@ -9,123 +9,105 @@ namespace Apteka.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-  
-    public class AdminAccountService : IAdminAccountService
+
+    public class AccountControllers : ControllerBase
     {
-        private readonly PharmacyDbContext _pharmacyDb;
+        private readonly IAdminAccountService _account;
 
-        public AdminAccountService(PharmacyDbContext pharmacyDb)
+        public AccountControllers(IAdminAccountService account)
         {
-            _pharmacyDb = pharmacyDb;
+            _account = account;
+
         }
-
-        public async Task<StateResponse<IEnumerable<Admin>>> GetAllDataAsync()
+        [HttpGet]
+        public async Task<IActionResult> GetAllAdminData()
         {
-            Admin admin = new Admin();
-            List<Admin> admins = new List<Admin>();
-            StateResponse<IEnumerable<Admin>> stateResponse = new StateResponse<IEnumerable<Admin>>();
-            try
+            var get = await _account.GetAllDataAsync();
+            if (get.Code == 200 && get.Data is not null)
             {
-                var entityData = await _pharmacyDb.Admins.ToListAsync();
-                if (stateResponse is null)
-                {
-                    stateResponse.Code = (int)StatusResponse.Not_Found;
-                    stateResponse.Message = nameof(StatusResponse.Not_Found);
-                    stateResponse.Data = entityData;
-
-                }
-                if (stateResponse is not null)
-                {
-                    stateResponse.Code = (int)StatusResponse.Success;
-                    stateResponse.Message = nameof(StatusResponse.Success);
-                    stateResponse.Data = entityData;
-
-                }
-            }
-            catch
-            {
-
-                stateResponse.Code = (int)StatusResponse.Server_Eror;
-                stateResponse.Message = nameof(StatusResponse.Server_Eror);
-                stateResponse.Data = null;
-            }
-            return stateResponse;
-        }
-
-        public async Task<StateResponse<Admin>> GetByIdAsync(Guid id)
-        {
-            StateResponse<Admin> stateResponse = new StateResponse<Admin>();
-            try
-            {
-                var entityData = await _pharmacyDb.Admins.FirstOrDefaultAsync(p => p.Id == id);
-                if (entityData is not null)
-                {
-                    stateResponse.Code = (int)StatusResponse.Success;
-                    stateResponse.Message = nameof(StatusResponse.Success);
-                    stateResponse.Data = entityData;
-
-                }
-                if (entityData is null)
-                {
-                    stateResponse.Code = (int)StatusResponse.Not_Found;
-                    stateResponse.Message = nameof(StatusResponse.Not_Found);
-                    stateResponse.Data = new Admin();
-
-                }
+                return Ok(get);
 
             }
-            catch
+            if (get.Code == 500 && get.Data is not null)
             {
-                stateResponse.Code = (int)StatusResponse.Server_Eror;
-                stateResponse.Message = nameof(StatusResponse.Server_Eror);
-                stateResponse.Data = new Admin();
+                return BadRequest(get);
 
             }
-            return stateResponse;
-        }
+            return NotFound(get);
 
-        public Task<StateResponse<Admin>> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
         }
-
-        public async Task<StateResponse<Admin>> LogInAsync(string login, string password)
+        [HttpGet]
+        public async Task<IActionResult> GetById(int id)
         {
-            StateResponse<Admin> stateResponse = new StateResponse<Admin>();
-            try
+            var get = await _account.GetByIdAsync(id);
+            if (get.Code == 200 && get.Data is not null)
             {
-                var evtityData = await _pharmacyDb.Admins.FirstOrDefaultAsync(p => p.Login == login);
-                if (evtityData is null)
+                return Ok(get);
+            }
+            if (get.Code == 500 && get.Data is not null)
+            {
+                return BadRequest(get);
+
+            }
+            return NotFound(get);
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DelateAsync(string login, string password)
+        {
+            var del = await _account.DelateAsync(login, password);
+            {
+                if (del.Code == 200 && del.Data is true)
                 {
-                    stateResponse.Code = (int)StatusResponse.Not_Found;
-                    stateResponse.Message = nameof(StatusResponse.Not_Found);
-                    stateResponse.Data = evtityData;
+                    return Ok(del);
                 }
-                if (evtityData is not null)
+                if (del.Code == 500 && del.Data is false)
                 {
-                    stateResponse.Code = (int)StatusResponse.Success;
-                    stateResponse.Message = nameof(StatusResponse.Success);
-                    stateResponse.Data = evtityData;
+                    return Ok(del);
                 }
+                return NotFound(del);
             }
-            catch
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> SignUpAdminAsync([FromForm] Admin entity)
+        {
+            var del = await _account.SignUpAsync(entity);
             {
-                stateResponse.Code = (int)StatusResponse.Server_Eror;
-                stateResponse.Message = nameof(StatusResponse.Server_Eror);
-                stateResponse.Data = new Admin();
+                if (del.Code == 200 && del.Data is not null)
+                {
+                    return Ok(del);
+                }
+                if (del.Code == 500 && del.Data is not null)
+                {
+                    return Ok(del);
+                }
+                return NotFound(del);
             }
-            return stateResponse;
+
         }
-
-
-        public Task<StateResponse<bool>> LogOutAsync(string login, string password)
+        [HttpGet]
+        public async Task<IActionResult> LigInAdminAsync(string login, string password)
         {
-            throw new NotImplementedException();
+            var del = await _account.LogInAsync(login, password);
+            {
+                if (del.Code == 200 && del.Data is not null)
+                {
+                    return Ok(del);
+                }
+                if (del.Code == 500 && del.Data is not null)
+                {
+                    return Ok(del);
+                }
+                return NotFound(del);
+            }
+
         }
 
-        public Task<StateResponse<Admin>> SignUpAsync(Admin entity)
-        {
-            throw new NotImplementedException();
-        }
+
+
     }
+
+
+
 }
+    
