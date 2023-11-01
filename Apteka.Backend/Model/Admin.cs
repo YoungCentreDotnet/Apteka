@@ -1,6 +1,8 @@
-﻿using LinqToDB.Mapping;
+﻿using Apteka.Backend.Model.Position;
+using LinqToDB.Mapping;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace Apteka.Backend.Model
 {
@@ -8,16 +10,15 @@ namespace Apteka.Backend.Model
     {
         [Identity]
         public int Id { get; set; }
-        [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public Role EmployeeRole { get; set; }
         [Required]
         [EmailAddress]
-        public string Login { get; set; }
+        public string? Login { get; set; }
         [PasswordPropertyText]
-        [MaxLength(8)]
-        public string Password { get; set; }
+        [MaxLength(18)]
+        public string? Password { get; set; }
 
     }
 }
