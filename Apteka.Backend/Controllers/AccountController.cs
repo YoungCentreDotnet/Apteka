@@ -69,45 +69,46 @@ namespace Apteka.Backend.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> SignUpAdminAsync([FromForm] Admin entity)
+        public async Task<IActionResult> SignUp([FromForm] Admin admin)
         {
-            var del = await _account.SignUpAsync(entity);
+            var res = await _account.SignUpAsync(admin);
+            if (res.Code == 302 && res.Data is not null)
             {
-                if (del.Code == 200 && del.Data is not null)
-                {
-                    return Ok(del);
-                }
-                if (del.Code == 500 && del.Data is not null)
-                {
-                    return Ok(del);
-                }
-                return NotFound(del);
-            }
+                return StatusCode(StatusCodes.Status302Found, res.Data);
 
-        }
-        [HttpGet]
-        public async Task<IActionResult> LigInAdminAsync(string login, string password)
-        {
-            var del = await _account.LogInAsync(login, password);
+            }
+            else if (res.Code == 201 && res.Data is not null)
             {
-                if (del.Code == 200 && del.Data is not null)
-                {
-                    return Ok(del);
-                }
-                if (del.Code == 500 && del.Data is not null)
-                {
-                    return Ok(del);
-                }
-                return NotFound(del);
+                return StatusCode(StatusCodes.Status201Created, res.Data);
             }
-
+            return StatusCode(StatusCodes.Status500InternalServerError, res.Data);
         }
 
+        }
+        //[HttpGet]
+        //public async Task<IActionResult> LogInAdminAsync(string login, string password)
+        //{
+        //    var del = await _account.LogInAsync(login, password);
+        //    {
+        //        if (del.Code == 200 && del.Data is not null)
+        //        {
+        //            return Ok(del);
+        //        }
+        //        if (del.Code == 500 && del.Data is not null)
+        //        {
+        //            return Ok(del);
+        //        }
+        //        return NotFound(del);
+        //    }
 
-
-    }
+        //}
 
 
 
 }
+
+
+
+
+
     

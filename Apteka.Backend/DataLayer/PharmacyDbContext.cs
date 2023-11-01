@@ -8,8 +8,6 @@ namespace Apteka.Backend.DataLayer
         
         public PharmacyDbContext(DbContextOptions<PharmacyDbContext> db) :base(db)
         { }
-
-        public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
     }
 }
