@@ -20,20 +20,24 @@ namespace Apteka.Backend.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAdminData()
+        public async Task<IActionResult> GetAllData()
         {
             var get = await _account.GetAllDataAsync();
             if (get.Code == 200 && get.Data is not null)
             {
-                return Ok(get);
+
+                return StatusCode(StatusCodes.Status200OK, get);
+
 
             }
             if (get.Code == 500 && get.Data is not null)
             {
-                return BadRequest(get);
+                return StatusCode(StatusCodes.Status500InternalServerError, get);
+
 
             }
-            return NotFound(get);
+            return StatusCode(StatusCodes.Status404NotFound, get);
+
 
         }
         [HttpGet]
@@ -42,29 +46,29 @@ namespace Apteka.Backend.Controllers
             var get = await _account.GetByIdAsync(id);
             if (get.Code == 200 && get.Data is not null)
             {
-                return Ok(get);
+                return StatusCode(StatusCodes.Status200OK, get);
             }
             if (get.Code == 500 && get.Data is not null)
             {
-                return BadRequest(get);
+                return StatusCode(StatusCodes.Status500InternalServerError, get);
 
             }
-            return NotFound(get);
+            return StatusCode(StatusCodes.Status404NotFound, get);
         }
         [HttpDelete]
-        public async Task<IActionResult> DelateAsync(string login, string password)
+        public async Task<IActionResult> Delate(string login, string password)
         {
             var del = await _account.DelateAsync(login, password);
             {
                 if (del.Code == 200 && del.Data is true)
                 {
-                    return Ok(del);
+                    return StatusCode(StatusCodes.Status200OK, del);
                 }
                 if (del.Code == 500 && del.Data is false)
                 {
-                    return Ok(del);
+                    return StatusCode(StatusCodes.Status500InternalServerError, del);
                 }
-                return NotFound(del);
+                return StatusCode(StatusCodes.Status404NotFound, del);
             }
 
         }
@@ -84,28 +88,46 @@ namespace Apteka.Backend.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, res.Data);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> LogIn(string login, string password)
+        {
+            var del = await _account.LogInAsync(login, password);
+            {
+                if (del.Code == 200 && del.Data is not null)
+                {
+
+                    return StatusCode(StatusCodes.Status200OK, del);
+                }
+                if (del.Code == 500 && del.Data is not null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, del); 
+                }
+                return StatusCode(StatusCodes.Status404NotFound, del);
+            }
         }
-        //[HttpGet]
-        //public async Task<IActionResult> LogInAdminAsync(string login, string password)
-        //{
-        //    var del = await _account.LogInAsync(login, password);
-        //    {
-        //        if (del.Code == 200 && del.Data is not null)
-        //        {
-        //            return Ok(del);
-        //        }
-        //        if (del.Code == 500 && del.Data is not null)
-        //        {
-        //            return Ok(del);
-        //        }
-        //        return NotFound(del);
-        //    }
+        [HttpPatch]
+        public async Task<IActionResult> Update(int id, [FromForm] Admin entity)
+        {
+            var del = await _account.UpdateAsync(id, entity);
+            if (del.Code == 200 && del.Data is true)
+            {
+                return Ok(del);
+            }
+            if (del.Code == 500 && del.Data is false)
+            {
+                return Ok(del);
+            }
+            return NotFound(del);
 
-        //}
-
-
-
+        }
+    }
 }
+    
+
+
+
+
 
 
 

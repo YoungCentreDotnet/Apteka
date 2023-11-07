@@ -8,7 +8,7 @@ namespace Apteka.Backend.Repository.Account
         Task<StateResponse<Admin>> LogInAsync(string login, string password);
         
         Task<StateResponse<bool>> DelateAsync(string login, string password);
-
+        Task<StateResponse<bool>> UpdateAsync(int id, Admin entity);
         Task<StateResponse<IEnumerable<Admin>>> GetAllDataAsync();
         Task<StateResponse<Admin>> GetByIdAsync(int id);
     }
