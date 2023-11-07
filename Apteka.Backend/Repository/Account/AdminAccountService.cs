@@ -183,5 +183,35 @@ namespace Apteka.Backend.Repository.Account
             }
             return stateResponse;
         }
+
+        public async Task<StateResponse<bool>> UpdateAsync(int id, Admin entity)
+        {
+            StateResponse<bool> stateResponse = new StateResponse<bool>();
+            try
+            {
+                var update = await _pharmacyDb.Admins.FirstOrDefaultAsync(p => p.Id == id);
+                if (entity is not null)
+                {
+                    _pharmacyDb.Admins.Remove(entity);
+                    await _pharmacyDb.SaveChangesAsync();
+                    stateResponse.Code = (int)StatusResponse.Success;
+                    stateResponse.Message = nameof(StatusResponse.Success);
+                    stateResponse.Data = true;
+                }
+                if (entity is null)
+                {
+                    stateResponse.Code = (int)StatusResponse.Not_Found;
+                    stateResponse.Message = nameof(StatusResponse.Not_Found);
+                    stateResponse.Data = false;
+                }
+            }
+            catch
+            {
+                stateResponse.Code = (int)StatusResponse.Server_Eror;
+                stateResponse.Message = nameof(StatusResponse.Server_Eror);
+                stateResponse.Data = false;
+            }
+            return stateResponse;
+        }
     }
 }
