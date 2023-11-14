@@ -47,38 +47,7 @@ namespace Apteka.Backend.Repository.Account
             return stateResponse;
         }
 
-        public async Task<StateResponse<IEnumerable<Admin>>> GetAllDataAsync()
-        {
-            Admin admin = new Admin();
-            List<Admin> admins = new List<Admin>();
-            StateResponse<IEnumerable<Admin>> stateResponse = new StateResponse<IEnumerable<Admin>>();
-            try
-            {
-                var entityData = await _pharmacyDb.Admins.ToListAsync();
-                if (stateResponse is null)
-                {
-                    stateResponse.Code = (int)StatusResponse.Not_Found;
-                    stateResponse.Message = nameof(StatusResponse.Not_Found);
-                    stateResponse.Data = entityData;
-
-                }
-                if (stateResponse is not null)
-                {
-                    stateResponse.Code = (int)StatusResponse.Success;
-                    stateResponse.Message = nameof(StatusResponse.Success);
-                    stateResponse.Data = entityData;
-
-                }
-            }
-            catch
-            {
-
-                stateResponse.Code = (int)StatusResponse.Server_Eror;
-                stateResponse.Message = nameof(StatusResponse.Server_Eror);
-                stateResponse.Data = null;
-            }
-            return stateResponse;
-        }
+     
 
         public async Task<StateResponse<Admin>> GetByIdAsync(int id)
         {
@@ -152,24 +121,26 @@ namespace Apteka.Backend.Repository.Account
         public async Task<StateResponse<Admin>> SignUpAsync(Admin entity)
         {
             StateResponse<Admin> stateResponse = new StateResponse<Admin>();
+            var res = await _pharmacyDb.Admins.FirstOrDefaultAsync(p => p.Id == entity.Id ||p.Login == entity.Login);
             try
             {
 
-                if (entity is not null)
+
+                if (res is null && entity is not null)
                 {
-                    await _pharmacyDb.AddAsync(entity);
+                    await _pharmacyDb.Admins.AddAsync(entity);
                     await _pharmacyDb.SaveChangesAsync();
 
-                    stateResponse.Code = (int)StatusResponse.Success;
-                    stateResponse.Message = nameof(StatusResponse.Success);
+                    stateResponse.Code = (int)StatusResponse.Created;
+                    stateResponse.Message = nameof(StatusResponse.Created);
                     stateResponse.Data = entity;
 
                 }
-                if (entity is null)
+                if (res is not null)
                 {
-                    stateResponse.Code = (int)StatusResponse.Not_Found;
-                    stateResponse.Message = nameof(StatusResponse.Not_Found);
-                    stateResponse.Data = new Admin();
+                    stateResponse.Code = (int)StatusResponse.Found;
+                    stateResponse.Message = nameof(StatusResponse.Found);
+                    stateResponse.Data = res;
 
                 }
 
@@ -190,13 +161,17 @@ namespace Apteka.Backend.Repository.Account
             try
             {
                 var update = await _pharmacyDb.Admins.FirstOrDefaultAsync(p => p.Id == id);
-                if (entity is not null)
+                if (update is not null && entity is not null)
                 {
-                    _pharmacyDb.Admins.Remove(entity);
+                    update.FirstName = entity.FirstName;
+                    update.LastName = entity.LastName;
+                    update.Login = entity.Login;
+                    update.Password = entity.Password;
                     await _pharmacyDb.SaveChangesAsync();
                     stateResponse.Code = (int)StatusResponse.Success;
                     stateResponse.Message = nameof(StatusResponse.Success);
                     stateResponse.Data = true;
+
                 }
                 if (entity is null)
                 {
@@ -210,6 +185,39 @@ namespace Apteka.Backend.Repository.Account
                 stateResponse.Code = (int)StatusResponse.Server_Eror;
                 stateResponse.Message = nameof(StatusResponse.Server_Eror);
                 stateResponse.Data = false;
+            }
+            return stateResponse;
+        }
+
+        public async Task<StateResponse<IEnumerable<Admin>>> GetAllDataAsync()
+        {
+            Admin admin = new Admin();
+            List<Admin> admins = new List<Admin>();
+            StateResponse<IEnumerable<Admin>> stateResponse = new StateResponse<IEnumerable<Admin>>();
+            try
+            {
+                var entityData = await _pharmacyDb.Admins.ToListAsync();
+                if (stateResponse is null)
+                {
+                    stateResponse.Code = (int)StatusResponse.Not_Found;
+                    stateResponse.Message = nameof(StatusResponse.Not_Found);
+                    stateResponse.Data = entityData;
+
+                }
+                if (stateResponse is not null)
+                {
+                    stateResponse.Code = (int)StatusResponse.Success;
+                    stateResponse.Message = nameof(StatusResponse.Success);
+                    stateResponse.Data = entityData;
+
+                }
+            }
+            catch
+            {
+
+                stateResponse.Code = (int)StatusResponse.Server_Eror;
+                stateResponse.Message = nameof(StatusResponse.Server_Eror);
+                stateResponse.Data = null;
             }
             return stateResponse;
         }

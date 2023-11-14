@@ -76,14 +76,15 @@ namespace Apteka.Backend.Controllers
         public async Task<IActionResult> SignUp([FromForm] Admin admin)
         {
             var res = await _account.SignUpAsync(admin);
-            if (res.Code == 302 && res.Data is not null)
+            if (res.Code == 201 && res.Data is not null)
+            {
+                return StatusCode(StatusCodes.Status201Created, res.Data);
+            }
+            
+            else if (res.Code == 302 && res.Data is not null)
             {
                 return StatusCode(StatusCodes.Status302Found, res.Data);
 
-            }
-            else if (res.Code == 201 && res.Data is not null)
-            {
-                return StatusCode(StatusCodes.Status201Created, res.Data);
             }
             return StatusCode(StatusCodes.Status500InternalServerError, res.Data);
         }

@@ -1,5 +1,6 @@
 using Apteka.Backend.DataLayer;
 using Apteka.Backend.Repository.Account;
+using Apteka.Backend.Repository.User;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IAdminAccountService, AdminAccountService>();
+builder.Services.AddTransient<IEmployeServise, EmployeServise>();
 
 builder.Services.AddDbContext<PharmacyDbContext>(op =>
                 op.UseNpgsql(builder.Configuration.GetConnectionString("PharmacyConnectionString")));

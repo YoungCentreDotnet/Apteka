@@ -7,6 +7,7 @@
         Not_Found = 404,
         BadRequest = 400,
         Created = 201,
+        Found = 302
 
     }
 }

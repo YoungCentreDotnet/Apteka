@@ -8,6 +8,8 @@ namespace Apteka.Backend.Model
 {
     public class Admin
     {
+      
+
         [Identity]
         public int Id { get; set; }
         public string? FirstName { get; set; }
