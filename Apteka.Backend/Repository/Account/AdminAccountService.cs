@@ -4,7 +4,7 @@ using LinqToDB;
 
 namespace Apteka.Backend.Repository.Account
 {
-    public class AdminAccountService : IAdminAccountService
+    public class AdminAccountService: IAdminAccountService
     {
         private readonly PharmacyDbContext _pharmacyDb;
 
@@ -47,7 +47,7 @@ namespace Apteka.Backend.Repository.Account
             return stateResponse;
         }
 
-
+     
 
         public async Task<StateResponse<Admin>> GetByIdAsync(int id)
         {
@@ -81,7 +81,7 @@ namespace Apteka.Backend.Repository.Account
             return stateResponse;
         }
 
-
+        
 
         public async Task<StateResponse<Admin>> LogInAsync(string login, string password)
         {
@@ -121,7 +121,7 @@ namespace Apteka.Backend.Repository.Account
         public async Task<StateResponse<Admin>> SignUpAsync(Admin entity)
         {
             StateResponse<Admin> stateResponse = new StateResponse<Admin>();
-            var res = await _pharmacyDb.Admins.FirstOrDefaultAsync(p => p.Id == entity.Id || p.Login == entity.Login);
+            var res = await _pharmacyDb.Admins.FirstOrDefaultAsync(p => p.Id == entity.Id ||p.Login == entity.Login);
             try
             {
 
